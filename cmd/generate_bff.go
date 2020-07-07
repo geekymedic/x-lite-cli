@@ -34,11 +34,11 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		sysDir, err := util.SystemBaseDir()
+		sysDir, systemName, err := util.SystemBaseDir()
 		if err != nil {
 			util.StdoutExit(-1, "Fail to generate bff: %v", err)
 		}
-		err = services.CreateBff(sysDir, bffName)
+		err = services.CreateBff(sysDir, systemName, bffName)
 		if err != nil {
 			util.StdoutExit(-1, "Fail to generate bff: %v", err)
 		}

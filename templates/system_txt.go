@@ -1,10 +1,10 @@
 package templates
 
 const (
-	configYmlTxt = `Name: demo-system-bff
+	configYmlTxt = `Name: {{.SystemName}}-bff
 Address: ":8003"`
 
-	gomodTxt = `module demo-system
+	gomodTxt = `module {{.SystemName}}
 
 go 1.14`
 
@@ -14,8 +14,8 @@ import (
 	"github.com/geekymedic/x-lite/logger"
 	_ "github.com/geekymedic/x-lite/plugin/xmertics"
 
-	"demo-system/bff"
-	"demo-system/services"
+	"{{.SystemName}}/bff"
+	"{{.SystemName}}/services"
 )
 
 func main() {

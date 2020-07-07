@@ -43,7 +43,7 @@ func CreateSystem(systemName string, dirOut string) error {
 	sysBaseDir := filepath.Join(dirOut, systemName)
 	//create bff
 	{
-		CreateBff(sysBaseDir, "admin")
+		CreateBff(sysBaseDir, systemName, "admin")
 	}
 
 	//create services
@@ -53,7 +53,24 @@ func CreateSystem(systemName string, dirOut string) error {
 
 	//create config
 	{
-		CreateConfig(sysBaseDir)
+		configDir := filepath.Join(sysBaseDir, "config")
+		err := os.MkdirAll(configDir, os.ModePerm)
+		if err != nil {
+			return xerrors.By(err)
+		}
+
+		file := filepath.Join(configDir, "config.yml")
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			f, err := os.OpenFile(file, os.O_WRONLY|os.O_CREATE, 0644)
+			if err != nil {
+				return xerrors.By(err)
+			}
+			defer f.Close()
+			err = templates.ConfigYmlTxt.Execute(f, map[string]interface{}{"SystemName": systemName})
+			if err != nil {
+				return xerrors.By(err)
+			}
+		}
 	}
 
 	//create gomod
@@ -64,7 +81,7 @@ func CreateSystem(systemName string, dirOut string) error {
 			return xerrors.By(err)
 		}
 		defer f.Close()
-		err = templates.GomodTxt.Execute(f, nil)
+		err = templates.GomodTxt.Execute(f, map[string]interface{}{"SystemName": systemName})
 		if err != nil {
 			return xerrors.By(err)
 		}
@@ -78,7 +95,7 @@ func CreateSystem(systemName string, dirOut string) error {
 			return xerrors.By(err)
 		}
 		defer f.Close()
-		err = templates.SystemMainTxt.Execute(f, nil)
+		err = templates.SystemMainTxt.Execute(f, map[string]interface{}{"SystemName": systemName})
 		if err != nil {
 			return xerrors.By(err)
 		}

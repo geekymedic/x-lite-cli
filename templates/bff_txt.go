@@ -27,7 +27,7 @@ type SumResponse struct {
 // @login: Y
 // @version: 0.0.1
 // @page:
-// @uri: /api/admin/v1/admin/demo/sum
+// @uri: /api/admin/v1/{{.BffName}}/demo/sum
 // @describe:
 func SumHandler(state *bff.State) {
 	var (
@@ -69,13 +69,13 @@ func init() {
 import (
 	"github.com/geekymedic/x-lite/framework/bff"
 
-	"demo-system/bff/admin/impls/demo"
+	"{{.SystemName}}/bff/{{.BffName}}/impls/demo"
 )
 
 func init() {
 	group := bff.Engine().Group("/admin/v1")
 	{
-		group := group.Group("/demo")
+		group := group.Group("/{{.BffName}}/demo")
 		group.POST("/sum", bff.HttpHandler(demo.SumHandler))
 	}
 }`
@@ -85,7 +85,7 @@ func init() {
 import (
 	"github.com/geekymedic/x-lite/framework/bff"
 	_ "github.com/geekymedic/x-lite/plugin/xvalidate"
-	_ "demo-system/bff/admin/router"
+	_ "{{.SystemName}}/bff/admin/router"
 )
 
 func Main() error {

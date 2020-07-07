@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func CreateBff(sysDir string, bffName string) error {
+func CreateBff(sysDir string, systemName string, bffName string) error {
 	bffBaseDir := filepath.Join(sysDir, "bff")
 	err := os.MkdirAll(bffBaseDir, os.ModePerm)
 	if err != nil {
@@ -24,7 +24,7 @@ func CreateBff(sysDir string, bffName string) error {
 				return xerrors.By(err)
 			}
 			defer f.Close()
-			err = templates.BffMainTxt.Execute(f, nil)
+			err = templates.BffMainTxt.Execute(f, map[string]interface{}{"SystemName": systemName})
 			if err != nil {
 				return xerrors.By(err)
 			}
@@ -65,7 +65,7 @@ func CreateBff(sysDir string, bffName string) error {
 			return xerrors.By(err)
 		}
 		defer f.Close()
-		err = templates.BffRouterTxt.Execute(f, nil)
+		err = templates.BffRouterTxt.Execute(f, map[string]interface{}{"SystemName": systemName, "BffName": bffName})
 		if err != nil {
 			return xerrors.By(err)
 		}
@@ -84,7 +84,7 @@ func CreateBff(sysDir string, bffName string) error {
 			return xerrors.By(err)
 		}
 		defer f.Close()
-		err = templates.BffImplTxt.Execute(f, nil)
+		err = templates.BffImplTxt.Execute(f, map[string]interface{}{"BffName": bffName})
 		if err != nil {
 			return xerrors.By(err)
 		}
