@@ -109,7 +109,7 @@ func CreateSystem(systemName string, dirOut string) error {
 			return xerrors.By(err)
 		}
 		defer f.Close()
-		err = templates.MakeFileTxt.Execute(f, nil)
+		err = templates.MakeFileTxt.Execute(f, map[string]interface{}{"SystemName": systemName, "Typ": "bff"})
 		if err != nil {
 			return xerrors.By(err)
 		}

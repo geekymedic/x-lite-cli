@@ -5,15 +5,15 @@ const (
 GOBUILD=$(GOCMD) build -mod=vendor
 GOTEST=$(GOCMD) test -mod=vendor
 
-NAME=demo
+NAME={{.SystemName}}
 
-GOPACKAGE=github.com/geekymedic/neon
+GOPACKAGE= github.com/geekymedic/x-lite
 
 GITCOMMIT=$(shell git rev-parse HEAD)
 #GITTAG=$(shell git rev-list --tags --max-count=1)
 #GITTAG:=$(shell git describe --tags $(GITTAG))
 GITCOMMITTIME=$(shell git log -1 --format=%cd --date=local)
-PRONAME=$(NAME)-system-job
+PRONAME=$(NAME)-{{.Typ}}
 
 ldflags=-X $(GOPACKAGE)/version.GITCOMMIT=$(GITCOMMIT)
 #ldflags:=$(ldflags) -X $(GOPACKAGE)/version.GITTAG=$(GITTAG)
