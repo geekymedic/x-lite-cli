@@ -25,4 +25,7 @@ var (
 
 	//make_file
 	MakeFileTxt, _ = template.New("").Parse(makeFileTxt)
+
+	//makedown
+	InterfaceMarkdownTxt, _ = template.New("").Parse(interfaceMarkdownTxt)
 )

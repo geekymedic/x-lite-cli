@@ -19,13 +19,15 @@ import (
 	"github.com/geekymedic/x-lite-cli/services"
 	"github.com/geekymedic/x-lite-cli/util"
 	"github.com/spf13/cobra"
+	"os"
 )
 
-var bffName string
+var sysDir string
+var implName string
 
-// generateBffCmd represents the generateBff command
-var generateBffCmd = &cobra.Command{
-	Use:   "bff",
+// generateMdCmd represents the generateMd command
+var generateMdCmd = &cobra.Command{
+	Use:   "md",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -34,27 +36,34 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		sysDir, systemName, err := util.SystemBaseDir()
-		if err != nil {
-			util.StdoutExit(-1, "Fail to generate bff: %v", err)
+		if bffName == "" && implName != "" {
+			util.StdoutExit(-1, "invalid bff name")
 		}
-		err = services.CreateBff(sysDir, systemName, bffName)
+		sysDir, _, err := util.SystemBaseDir()
 		if err != nil {
-			util.StdoutExit(-1, "Fail to generate bff: %v", err)
+			util.StdoutExit(-1, "Fail to generate md: %v", err)
+		}
+		err = services.CreateMd(sysDir, bffName, implName)
+		if err != nil {
+			util.StdoutExit(-1, "Fail to generate md: %v", err)
 		}
 	},
 }
 
 func init() {
-	generateCmd.AddCommand(generateBffCmd)
+	generateCmd.AddCommand(generateMdCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// generateBffCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// generateMdCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	generateBffCmd.Flags().StringVar(&bffName, "bff-name", "admin", "bff name")
+
+	dir, _ := os.Getwd()
+	generateMdCmd.Flags().StringVar(&sysDir, "sys-dir", dir, "system directory")
+	generateMdCmd.Flags().StringVar(&bffName, "bff-name", "", "bff-name: admin")
+	generateMdCmd.Flags().StringVar(&implName, "impl-name", "", "impl name: demo")
 }
